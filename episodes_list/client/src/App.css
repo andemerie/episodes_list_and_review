@@ -1,0 +1,32 @@
+.workarea {
+  margin-top: 2rem;
+}
+
+.filters {
+  display: flex;
+  flex-direction: row;
+}
+
+.season-select {
+  width: 9rem;
+}
+
+.title-filter {
+  margin-left: 1rem;
+}
+
+.title-input {
+  width: 23.3rem;
+}
+
+.no-episodes {
+  padding-top: 1rem;
+}
+
+.episodes-table {
+  margin-top: 1rem;
+}
+
+.some-error {
+  color: red;
+}
