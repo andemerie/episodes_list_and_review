@@ -5,6 +5,14 @@ const _ = require('lodash');
 const app = express();
 const port = process.env.PORT || 5000;
 
+const filterEpisodes = (query, episodes) => {
+  const season = +query.season;
+  if (!season) {
+    return episodes;
+  }
+  return episodes.filter(episode => episode.season === season);
+};
+
 app.get('/api/episodes', (request, response) => {
   fs.readFile('episodes.json', 'utf-8', (error, jsonData) => {
     if (error) {
@@ -23,13 +31,12 @@ app.get('/api/episodes', (request, response) => {
     const seasons = [...seasonsSet];
     seasons.sort();
 
-    const season = +request.query.season;
-    if (season) {
-      episodes = episodes.filter(episode => episode.season === season);
-    }
+    const filteredEpisodes = filterEpisodes(request.query, episodes);
 
-    response.send({ episodes, seasons });
+    response.send({ episodes: filteredEpisodes, seasons });
   });
 });
 
 app.listen(port, () => console.log(`episodes-list app listening on port ${port}`));
+
+module.exports = { filterEpisodes };

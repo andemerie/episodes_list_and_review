@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 
 import * as api from './api';
 import 'bulma/css/bulma.css';
-import './App.css'
+import './App.css';
+
+const allSeasons = { value: '', label: 'All seasons' };
 
 class App extends Component {
   state = {
     episodes: [],
     seasons: [],
-    seasonFilter: '',
+    seasonFilter: allSeasons.value,
     titleFilter: '',
     error: false,
   };
@@ -17,8 +19,9 @@ class App extends Component {
     this.fetchData();
   }
 
-  fetchData = async (season) => {
-    const url = `/api/episodes${season ? `?season=${season}` : ''}`;
+  fetchData = async () => {
+    const { seasonFilter } = this.state;
+    const url = `/api/episodes${seasonFilter ? `?season=${seasonFilter}` : ''}`;
     api.get(url)
       .then(({ episodes, seasons }) => this.setState({ episodes, seasons, error: false }))
       .catch(error => {
@@ -28,9 +31,7 @@ class App extends Component {
 
   onFilterSeason = ({ target }) => {
     const { value } = target;
-    this.setState({ seasonFilter: value }, () => {
-      this.fetchData(value);
-    });
+    this.setState({ seasonFilter: value }, this.fetchData);
   };
 
   onFilterTitle = ({ target }) => {
@@ -41,7 +42,7 @@ class App extends Component {
     const { episodes, seasons, seasonFilter, titleFilter, error } = this.state;
 
     const selectOptions = [
-      { value: '', label: 'All seasons'},
+      allSeasons,
       ...seasons.map(value => ({ value, label: `${value} season`}))
     ];
 
